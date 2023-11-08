@@ -1,3 +1,7 @@
+CREATE DATABASE firma;
+USE firma;
+CREATE SCHEMA rozliczenia;
+
 CREATE TABLE pracownicy (
     id_pracownika SERIAL PRIMARY KEY,
     imie VARCHAR(20) NOT NULL,
@@ -14,8 +18,8 @@ CREATE TABLE godziny (
 );
 
 ALTER TABLE godziny
-ADD CONSTRAINT fk_pracownika
-FOREIGN KEY (id_pracownika)
+--ADD CONSTRAINT fk_pracownika
+ADD FOREIGN KEY (id_pracownika)
 REFERENCES pracownicy(id_pracownika);
 
 CREATE TABLE premie (
@@ -33,8 +37,8 @@ CREATE TABLE pensje (
 
 
 ALTER TABLE pensje
-ADD CONSTRAINT fk_premia
-FOREIGN KEY (id_premii)
+--ADD CONSTRAINT fk_premia
+ADD FOREIGN KEY (id_premii)
 REFERENCES premie(id_premii);
 
 
@@ -98,8 +102,8 @@ SELECT nazwisko, adres
 FROM rozliczenia.pracownicy;
 	
 SELECT
-    DATE_PART('day', data) AS dzien_tygodnia,
-    DATE_PART('month', data) AS miesiac
+    DATEPART(WEEKDAY, data) AS dzien_tygodnia,
+    DATEPART('month', data) AS miesiac
 FROM rozliczenia.godziny;
 
 SELECT
@@ -108,12 +112,13 @@ SELECT
 FROM rozliczenia.godziny;
 
 ALTER TABLE rozliczenia.pensje
-ADD COLUMN kwota_netto NUMERIC(10, 2);
-UPDATE rozliczenia.pensje
-SET kwota_netto = kwota * 0.75;
-ALTER TABLE rozliczenia.pensje
 RENAME COLUMN kwota TO kwota_brutto;
 
+ALTER TABLE rozliczenia.pensje
+ADD kwota_netto DECIMAL(10,2);
+
+UPDATE rozliczenia.pensje
+SET kwota_netto = kwota_brutto / 1.23;
 
 
 SELECT kwota_brutto, kwota_netto 
