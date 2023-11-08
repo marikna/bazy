@@ -1,0 +1,79 @@
+CREATE DATABASE firma;
+USE firma;
+CREATE SCHEMA ksiegowosc;
+
+-- tabela z danymi pracownikow
+CREATE TABLE ksiegowosc.pracownicy (
+	id_pracownika INT PRIMARY KEY,
+	imie VARCHAR(20) NOT NULL,
+	nazwisko VARCHAR(30) NOT NULL,
+	adres VARCHAR(50) NOT NULL,
+	telefon VARCHAR(20)
+);
+
+-- tabela z danymi dotyczacymi godzin
+CREATE TABLE ksiegowosc.godziny (
+    id_godziny INT PRIMARY KEY,
+    data DATE NOT NULL,
+    liczba_godzin DECIMAL(2, 2) NOT NULL ,
+    id_pracownika INT NOT NULL
+);
+
+ALTER TABLE ksiegowosc.godziny
+ADD FOREIGN KEY (id_pracownika)
+REFERENCES ksiegowosc.pracownicy(id_pracownika);
+
+
+-- tabela z danymi pensji
+CREATE TABLE ksiegowosc.pensje (
+    id_pensji INT PRIMARY KEY,
+    stanowisko VARCHAR(50) NOT NULL,
+    kwota DECIMAL(10, 2) NOT NULL,
+    id_premii INT NOT NULL
+);
+
+-- tabela z danymi premii
+CREATE TABLE ksiegowosc.premie (
+    id_premii INT PRIMARY KEY,
+    rodzaj VARCHAR(50) NOT NULL,
+    kwota DECIMAL(10, 2) NOT NULL
+);
+
+ALTER TABLE ksiegowosc.pensje
+ADD FOREIGN KEY (id_premii)
+REFERENCES ksiegowosc.premie(id_premii);
+
+
+-- tabela z danymi wynagrodzen
+CREATE TABLE ksiegowosc.wynagrodzenia (
+	id_wynagrodzenia INT PRIMARY KEY,
+	data DATE NOT NULL,
+	id_pracownika INT NOT NULL,
+	id_godziny INT NOT NULL,
+	id_pensji INT NOT NULL,
+	id_premii INT NOT NULL	
+);
+
+ALTER TABLE ksiegowosc.wynagrodzenia
+ADD FOREIGN KEY (id_pracownika)
+REFERENCES ksiegowosc.pracownicy(id_pracownika);
+
+ALTER TABLE ksiegowosc.wynagrodzenia
+ADD FOREIGN KEY (id_godziny)
+REFERENCES ksiegowosc.godziny(id_godziny);
+
+ALTER TABLE ksiegowosc.wynagrodzenia
+ADD FOREIGN KEY (id_pensji)
+REFERENCES ksiegowosc.pensje(id_pensji);
+
+ALTER TABLE ksiegowosc.wynagrodzenia
+ADD FOREIGN KEY (id_premii)
+REFERENCES ksiegowosc.premie(id_premii);
+
+
+
+
+
+
+
+
