@@ -61,7 +61,184 @@ ADD FOREIGN KEY (id_premii)
 REFERENCES ksiegowosc.premie(id_premii);
 
 
+INSERT INTO ksiegowosc.pracownicy ( id_pracownika, imie, nazwisko, adres, telefon)
+VALUES
+	( 1, 'Maria', 'Knapczyk', 'ul. Orzechowa 2', '501320500'),
+	( 2, 'Marta', 'Knap', 'ul. Górska 2', '500067500'),
+	( 3, 'Marek', 'Pałac', 'ul. Zaczarowana 132', '507830500'),
+	( 4, 'Marina', 'Rybak', 'ul. Magiczna 200', '500509040'),
+	( 5, 'Marysia', 'Orzechowska', 'ul. Fiszera 22', '500533400'),
+	( 6, 'Marcysia', 'Rosiek', 'ul. Jeremiasza 72', '500505410'),
+	( 7, 'Marian', 'Melor', 'ul. Armii 462', '500587300'),
+	( 8, 'Mariola', 'Bąk', 'ul. Wojny 62', '500772500'),
+	( 9, 'Martyna', 'Burek', 'ul. Kwiatowa 21', '504890500'),
+	( 10, 'Margot', 'Czar', 'ul. Las 222', '504370500');
 
+
+ALTER TABLE ksiegowosc.godziny
+ALTER COLUMN liczba_godzin TYPE DECIMAL(4, 2);
+
+
+INSERT INTO ksiegowosc.godziny ( id_godziny, data, liczba_godzin, id_pracownika)
+VALUES
+   (1, '2023-10-30', 8.00, 1),
+   (2, '2022-10-20', 8.50, 2),
+   (3, '2022-08-29', 8.00, 3),
+   (4, '2021-04-14', 7.50, 4),
+   (5, '2021-03-18', 6.50, 5),
+   (6, '2021-09-02', 7.00, 6),
+   (7, '2020-01-07', 8.00, 7),
+   (8, '2020-04-23', 8.00, 8),
+   (9, '2020-02-19', 4.50, 9),
+   (10, '2020-08-05', 7.00, 10);
+   
+   
+INSERT INTO ksiegowosc.pensje (id_pensji, stanowisko, kwota)
+VALUES
+    (1, 'Kierownik', 10000.00),
+    (2, 'Wicekierownik', 8000.00),
+    (3, 'Pracownik', 5200.00),
+    (4, 'Pracownik', 5200.00),
+    (5, 'Pracownik', 5200.00),
+    (6, 'Pracownik', 4000.00),
+    (7, 'Pracownik', 3500.00),
+    (8, 'Coach', 6000.00),
+    (9, 'Sprzątacz', 3000.00),
+    (10, 'Sprzątacz', 3000.00);
+
+
+INSERT INTO ksiegowosc.premie (id_premii, rodzaj, kwota)
+VALUES
+    (1, 'Brak premii', 0.00),
+    (2, 'Brak premii', 0.00),
+    (3, 'Awans', 1200.00),
+    (4, 'Premia uznaniowa', 500.00),
+    (5, 'Premia uznaniowa', 600.00),
+    (6, 'Premia uznaniowa', 500.00),
+    (7, 'Premia za frekwencję', 300.00),
+    (8, 'Brak premii', 0.00),
+    (9, 'Brak premii', 0.00),
+    (10, 'Brak premii', 0.00);
+
+	
+INSERT INTO ksiegowosc.wynagrodzenia (id_wynagrodzenia, data, id_pracownika, id_pensji, id_premii )	
+VALUES
+	(1, '2021-11-30', 1, 1, 1),
+   	(2, '2022-05-22', 2, 2, 2),
+   	(3, '2022-08-25', 3, 3, 3),
+   	(4, '2021-04-04', 4, 4, 4),
+   	(5, '2021-03-15', 5, 5, 5),
+   	(6, '2021-07-02', 6, 6, 6),
+   	(7, '2020-07-17', 7, 7, 7),
+   	(8, '2020-10-29', 8, 8, 8),
+   	(9, '2020-10-19', 9, 9, 9),
+   	(10,'2020-08-05', 10, 10, 10);
+	
+	
+
+----------------...a)...----------------
+SELECT id_pracownika,nazwisko FROM ksiegowosc.pracownicy
+	
+----------------...b)...----------------
+SELECT id_pracownika FROM ksiegowosc.wynagrodzenia
+JOIN ksiegowosc.pensje ON ksiegowosc.wynagrodzenia.id_pensji = ksiegowosc.pensje.id_pensji
+WHERE ksiegowosc.pensje.kwota > 1000
+	
+----------------...c)...----------------	
+SELECT id_pracownika FROM ksiegowosc.wynagrodzenia
+JOIN ksiegowosc.premie ON ksiegowosc.wynagrodzenia.id_premii = ksiegowosc.premie.id_premii
+JOIN ksiegowosc.pensje ON ksiegowosc.wynagrodzenia.id_pensji = ksiegowosc.pensje.id_pensji
+WHERE ksiegowosc.premie.kwota = 0 AND ksiegowosc.pensje.kwota > 2000
+	
+----------------...d)...----------------	
+SELECT imie FROM ksiegowosc.pracownicy
+WHERE imie LIKE 'J%'
+	
+----------------...e)...----------------	
+SELECT imie,nazwisko FROM ksiegowosc.pracownicy
+WHERE nazwisko LIKE '%n%' AND imie LIKE '%a'
+
+----------------...f)...-------------zakladam 21 dni pracujace 160/21=7.6--------------
+SELECT imie, nazwisko, SUM(CASE WHEN ksiegowosc.godziny.liczba_godzin > 7.6 THEN liczba_godzin * 21 - 160 ELSE 0 END) AS liczba_nadgodzin
+FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.godziny.id_pracownika
+GROUP BY
+  ksiegowosc.pracownicy.imie, ksiegowosc.pracownicy.nazwisko
+  
+----------------...g)...----------------
+SELECT imie, nazwisko FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenia.id_pracownika
+JOIN ksiegowosc.pensje ON ksiegowosc.wynagrodzenia.id_pensji = ksiegowosc.pensje.id_pensji
+WHERE ksiegowosc.pensje.kwota > 1500 AND ksiegowosc.pensje.kwota < 3000
+
+----------------...h)...----------------
+SELECT imie, nazwisko FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.godziny.id_pracownika
+JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.wynagrodzenia.id_pracownika = ksiegowosc.pracownicy.id_pracownika
+JOIN ksiegowosc.premie ON ksiegowosc.wynagrodzenia.id_premii = ksiegowosc.premie.id_premii
+WHERE ksiegowosc.godziny.liczba_godzin > 7.6 AND ksiegowosc.premie.kwota = 0
+
+----------------...i)...----------------
+
+
+
+
+----------------...j)...----------------
+
+
+
+
+----------------...k)...----------------
+
+
+
+----------------...l)...----------------
+
+
+
+
+----------------...m)...----------------
+
+
+
+
+
+----------------...n)...----------------
+
+
+
+
+----------------...o)...----------------
+
+
+
+
+
+----------------...p)...----------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 
