@@ -179,68 +179,46 @@ JOIN ksiegowosc.premie ON ksiegowosc.wynagrodzenia.id_premii = ksiegowosc.premie
 WHERE ksiegowosc.godziny.liczba_godzin > 7.6 AND ksiegowosc.premie.kwota = 0
 
 ----------------...i)...----------------
-
-
+SELECT pracownicy.imie, pracownicy.nazwisko, pensje.kwota from ksiegowosc.pensje
+JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.pensje.id_pensji = ksiegowosc.wynagrodzenia.id_pensji
+JOIN ksiegowosc.pracownicy ON ksiegowosc.wynagrodzenia.id_pracownika = ksiegowosc.pracownicy.id_pracownika
+ORDER BY kwota ASC
 
 
 ----------------...j)...----------------
-
-
-
+SELECT pracownicy.imie, pracownicy.nazwisko, pensje.kwota,  premie.kwota FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenia.id_pracownika
+JOIN ksiegowosc.premie ON ksiegowosc.wynagrodzenia.id_premii = ksiegowosc.premie.id_premii
+JOIN ksiegowosc.pensje ON ksiegowosc.wynagrodzenia.id_pensji = ksiegowosc.pensje.id_pensji 
+ORDER by pensje.kwota DESC, premie.kwota DESC
 
 ----------------...k)...----------------
-
-
+SELECT pensje.stanowisko, COUNT (id_pensji) AS liczba_stanowiska FROM ksiegowosc.pensje
+GROUP BY pensje.stanowisko
+ORDER BY COUNT(id_pensji) ASC
 
 ----------------...l)...----------------
-
-
-
+SELECT AVG(pensje.kwota) AS srednia, MIN(pensje.kwota) AS minimalna, MAX(pensje.kwota) AS maks
+FROM ksiegowosc.pensje
+WHERE pensje.stanowisko = 'Pracownik'
 
 ----------------...m)...----------------
-
-
-
-
+SELECT SUM (kwota) AS suma_wynagrodzen FROM ksiegowosc.pensje
 
 ----------------...n)...----------------
-
-
-
+SELECT pensje.stanowisko, SUM (kwota) AS suma_wynagrodzen FROM ksiegowosc.pensje
+GROUP BY stanowisko
 
 ----------------...o)...----------------
-
-
-
-
+SELECT pensje.stanowisko, COUNT(premie.kwota) AS liczba_premii FROM ksiegowosc.premie
+JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.premie.id_premii = ksiegowosc.wynagrodzenia.id_premii
+JOIN ksiegowosc.pensje ON ksiegowosc.wynagrodzenia.id_pensji = ksiegowosc.pensje.id_pensji
+GROUP BY pensje.stanowisko
 
 ----------------...p)...----------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-
+DELETE FROM ksiegowosc.pracownicy
+WHERE id_pracownika IN
+	( SELECT id_pracownika FROM ksiegowosc.wynagrodzenia
+	 WHERE id_pensji IN
+	 	( SELECT id_pensji FROM ksiegowosc.pensje
+		 WHERE pensje.kwota < 1200 ) )
