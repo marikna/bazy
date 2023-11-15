@@ -164,7 +164,17 @@ FROM ksiegowosc.pracownicy
 JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.godziny.id_pracownika
 GROUP BY
   ksiegowosc.pracownicy.imie, ksiegowosc.pracownicy.nazwisko
-  
+
+MOZNA UZYC: GREATEST((SUM)(l_godzin)-160),0) w SELECT 	 lub	HAVING nadgodziny > 0
+
+BEZ JOINA, WYCIAGAM TYLKO POTRZEBNE RZECZY:
+SELECT imie,nazwisko
+FROM pracownicy
+WHERE (SELECT id_pracownika)
+	FROM ksiegowosc.godziny
+	GROUP BY id_pracownika
+	HAVING SUM( liczba_godzin > 160) = pracownicy.id_pracownika
+
 ----------------...g)...----------------
 SELECT imie, nazwisko FROM ksiegowosc.pracownicy
 JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenia.id_pracownika
@@ -178,6 +188,14 @@ JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.wynagrodzenia.id_pracownika = ksiego
 JOIN ksiegowosc.premie ON ksiegowosc.wynagrodzenia.id_premii = ksiegowosc.premie.id_premii
 WHERE ksiegowosc.godziny.liczba_godzin > 7.6 AND ksiegowosc.premie.kwota = 0
 
+WERSJA DRUGA, wymaga aby premia mogla byc nullem:
+SELECT * ksiegowosc.wynagrodzenia
+WHERE id_pracownika
+(.....)
+AND
+id_premii IS NULL
+
+funkcja COALESCE - wyrzuca pierwsza nienullowa wartosc 
 ----------------...i)...----------------
 SELECT pracownicy.imie, pracownicy.nazwisko, pensje.kwota from ksiegowosc.pensje
 JOIN ksiegowosc.wynagrodzenia ON ksiegowosc.pensje.id_pensji = ksiegowosc.wynagrodzenia.id_pensji
