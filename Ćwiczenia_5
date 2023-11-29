@@ -1,0 +1,21 @@
+--ZADANIE 1---------------------------
+
+id_produktu -> nazwa_produktu, cena_produktu, VAT
+
+id_klienta -> nazwa_klienta
+
+suma_netto, VAT -> suma_brutto
+
+id_produktu, id_klienta, data_zamowienia -> ilość, suma_netto, suma_brutto
+
+--ZADANIE 2---------------------------
+
+--klucze: id_produktu, id_klienta, data_zamowienia
+
+--ZADANIE 3---------------------------
+
+id_pomieszczenia -> id_budynku, numer_pomieszczenia, powierzchnia, liczba_okien, liczba_drzwi
+miasto,ulica -> kod_pocztowy
+id_budynku -> ulica, kod_pocztowy, miasto
+
+--klucze: id_budynku, id_pomieszczenia
