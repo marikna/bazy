@@ -11,10 +11,10 @@ WHERE telefon IS NOT NULL;
 
 -- b)
 UPDATE ksiegowosc.pracownicy
-SET telefon = SUBSTRING( telefon FROM 1 FOR 3 ) || '-' || -- +48-
-		      SUBSTRING( telefon FROM 4 FOR 3 ) || '-' ||     -- 555-
-			    SUBSTRING( telefon FROM 7 FOR 3 ) || '-' ||     -- 222-
-			    SUBSTRING( telefon FROM 10 FOR 3 ); 		        -- 333
+SET telefon = SUBSTRING( telefon FROM 1 FOR 3 ) || '-' || 		 -- +48-
+		      SUBSTRING( telefon FROM 4 FOR 3 ) || '-' ||    	 -- 555-
+			    SUBSTRING( telefon FROM 7 FOR 3 ) || '-' ||  -- 222-
+			    SUBSTRING( telefon FROM 10 FOR 3 ); 	 -- 333
 
 SELECT * FROM ksiegowosc.pracownicy
 
@@ -52,5 +52,18 @@ LEFT JOIN
 
 
 -- f)
+-- concat łączy kilka wyrażeń w jedno 
+
+SELECT
+  CONCAT('Pracownik ', pracownicy.imie, ' ', pracownicy.nazwisko) AS dane_pracownika,
+  CONCAT('w dniu ', wynagrodzenia.data , ' otrzymał pensję całkowitą na kwotę ', (wynagrodzenia.kwota + premie.kwota) ‚  'zł, ' , 'gdzie wynagrodzenie zasadnicze wynosiło: ', w.kwota, ' zł, premia: ', premie.kwota, ' zł') AS raport
+FROM
+  ksiegowosc.wynagrodzenia
+JOIN
+  ksiegowosc.pracownicy ON wynagrodzenia.id_pracownika = pracownicy.id_pracownika
+JOIN
+  ksiegowosc.pensje ON wynagrodzenia.id_pensji = pensje.id_pensji
+LEFT JOIN
+  ksiegowosc.premie ON wynagrodzenia.id_premii = premie.id_premii;
 
 
