@@ -78,7 +78,7 @@ BEGIN
     old_tax := OLD.taxRate;
     new_tax := NEW.taxRate;
 --od razu w proentach
-    rate_change_percent := ((new_tax - old_tax) / old_tax) * 100;
+    rate_change_percent := ABS(((new_tax - old_tax) / old_tax)) * 100;
     IF ABS(rate_change) > 30 THEN
         RAISE EXCEPTION '!!Zmiana taxrate przekracza 30%%!!';
     END IF;
