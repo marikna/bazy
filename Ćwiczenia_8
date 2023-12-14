@@ -1,0 +1,39 @@
+--ZAD1  !do poprawki!
+
+WITH TempEmployeeInfo AS (
+SELECT person.person.businessentityid, person.person.firstname, person.person.lastname,
+	ROW_NUMBER() OVER (ORDER BY employeepayhistory.rate DESC) AS rowno
+	FROM 
+	person.person
+	JOIN 
+	humanresources.employeepayhistory ON person.businessentityid = employeepayhistory.businessentityid
+)	
+
+INSERT INTO TempEmployeeInfo ( businessentityid, firstname, lastname, rate )
+SELECT * FROM TempEmployeeInfo
+WHERE rowno = 1;
+
+
+
+
+--ZAD2
+
+WITH CustomerInfo AS (
+    SELECT
+        c.customerID,
+        c.territoryID AS customerterritoryid,
+        p.firstname || ' ' || p.lastname AS Salespersoninthisterritory
+    FROM
+        sales.customer c
+    JOIN
+        person.person p ON c.territoryID = p.businessentityID
+)
+
+SELECT
+    c.customerID,
+    c.customerterritoryid,
+    c.Salespersoninthisterritory
+FROM
+    CustomerInfo c;
+
+
