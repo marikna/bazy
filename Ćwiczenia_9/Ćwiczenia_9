@@ -22,11 +22,32 @@ CREATE INDEX idx_orderdate ON sales.salesorderheader (orderdate);
 
 --A
 
+BEGIN TRANSACTION;
+UPDATE production.product
+SET listprice = listprice * 1.10
+WHERE productid = 680;
+COMMIT;
 
+SELECT * FROM production.product WHERE productid = 680;
 
 
 --B
 
+BEGIN TRANSACTION;
+DELETE FROM production.product
+WHERE productid = 707;
+ROLLBACK;
+
+SELECT * FROM production.product WHERE productid = 707;
 
 
 --C
+
+BEGIN TRANSACTION;
+INSERT INTO production.product (name, productnumber, makeflag, color, productid, safetystocklevel, reorderpoint, standardcost, listprice, daystomanufacture, sellstartdate, rowguid, modifieddate )
+VALUES( 'New product', 'U7R5-HE', false, 'blue', 10, 4, 3, 0, 100, 10,'2008-04-30 00:00:00','9c21aed2-5bfa-4f18-bcb8-f11638dc2e4e','2014-02-08 10:01:36.827');
+
+SELECT * FROM production.product WHERE productid = 10;
+
+
+
