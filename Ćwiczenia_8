@@ -1,18 +1,24 @@
---ZAD1  !do poprawki!
+--ZAD1  
 
-WITH TempEmployeeInfo AS (
-SELECT person.person.businessentityid, person.person.firstname, person.person.lastname,
+CREATE TEMPORARY TABLE TempEmployeeInfo AS (
+	WITH EmployeeInfo AS (
+SELECT person.person.businessentityid, person.person.firstname, person.person.lastname, employeepayhistory.rate,
 	ROW_NUMBER() OVER (ORDER BY employeepayhistory.rate DESC) AS rowno
 	FROM 
 	person.person
 	JOIN 
 	humanresources.employeepayhistory ON person.businessentityid = employeepayhistory.businessentityid
 )	
+SELECT 
+    businessentityid,
+    firstname,
+    lastname,
+    rate
+  FROM EmployeeInfo
+  WHERE rowno = 1 );
 
 INSERT INTO TempEmployeeInfo ( businessentityid, firstname, lastname, rate )
 SELECT * FROM TempEmployeeInfo
-WHERE rowno = 1;
-
 
 
 
