@@ -1,3 +1,4 @@
+```
 CREATE DATABASE firma;
 USE firma;
 CREATE SCHEMA rozliczenia;
@@ -122,3 +123,4 @@ SET kwota_netto = kwota_brutto / 1.23;
 SELECT kwota_brutto, kwota_netto 
 FROM rozliczenia.pensje
 
+```
