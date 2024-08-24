@@ -48,8 +48,6 @@ VALUES
 	( 'Marta', 'Knap', 'ul. Górska 2', '500067500'),
 	( 'Marek', 'Pałac', 'ul. Zaczarowana 132', '507830500'),
 	( 'Marina', 'Rybak', 'ul. Magiczna 200', '500509040'),
-	( 'Marysia', 'Orzechowska', 'ul. Fiszera 22', '500533400'),
-	( 'Marcysia', 'Rosiek', 'ul. Jeremiasza 72', '500505410'),
 	( 'Marian', 'Melor', 'ul. Armii 462', '500587300'),
 	( 'Mariola', 'Bąk', 'ul. Wojny 62', '500772500'),
 	( 'Martyna', 'Burek', 'ul. Kwiatowa 21', '504890500'),
